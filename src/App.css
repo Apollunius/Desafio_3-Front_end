@@ -2,9 +2,9 @@
   font-family: sans-serif;
   text-align: center;
 }
-*{
-	box-sizing: border-box;
-	font-family: 'Sora', sans-serif;
+* {
+  box-sizing: border-box;
+  font-family: "Sora", sans-serif;
 }
 body {
   background-color: rgb(236, 235, 220);
@@ -12,131 +12,124 @@ body {
 }
 
 .header {
-  margin: 0;
+  display: flex;
+  justify-content: center;
+  padding: 2em;
   background-color: #2b7148;
   height: 4.5em;
   color: white;
 }
-.center{
-	display: flex;
-	justify-content: space-around;
-	align-items: center;
-	min-width: 100vw;
+.center {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  width: 100%;
+}
+.header .center {
+  align-items: center;
 }
 
-.rodada{
-	display: flex;
-	flex-direction: column;
-	margin-right: 2em;
+.rodada {
+  display: flex;
+  flex-direction: column;
+  margin-right: 2em;
 }
-.escolherRodada{
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	background-color: rgb(138, 185, 157);
-	width: auto;
-	height: 50px;
-	padding: 10px;
-	}
-.tabelaRodada{
-	background-color: white;
-	padding: 0 1em;
-	min-width: 100px;
-	}
-.headerTabela{
-	background-color: #8AB99D;
-	/* width: 600px; */
-	/* height: 30px; */
-	/* display: flex; */
-	padding: 0.5em 2em;
-	/* justify-content: space-between; */
+.escolherRodada {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(138, 185, 157);
+  width: auto;
+  height: 50px;
+  padding: 10px;
 }
-.bodyTabela{
-	/* display: flex; */
-	justify-content: space-around;
-	background-color: white;
-	text-align: center;
-	/* width: 600px; */
-	padding: 0.5em 2em;
-	
+.tabelaRodada {
+  background-color: white;
+  padding: 0 1em;
+  min-width: 100px;
 }
-.center2{
-	display: flex;
-	justify-content: space-around;
-	min-width: 70vw;
+.headerTabela {
+  background-color: #8ab99d;
+  /* width: 600px; */
+  /* height: 30px; */
+  /* display: flex; */
+  padding: 0.5em 2em;
+  /* justify-content: space-between; */
 }
-.content{
-	margin-top: 1em;
-	display: flex;
-	justify-content: space-around;
-	margin-bottom: 2em;
+.bodyTabela {
+  /* display: flex; */
+  justify-content: space-around;
+  background-color: white;
+  text-align: center;
+
+}
+.center2 {
+  display: flex;
+  justify-content: space-around;
+  min-width: 70vw;
+}
+.content {
+  padding: 2em;
+  display: flex;
+  justify-content: space-around;
 }
 
 .btnLogin {
-	background-color: #04375C;
-	border: none;
-	width: 7em;
-	height: 2.2em;
-	color: white;
-	border-radius: 5px;
+  background-color: #04375c;
+  border: none;
+  width: 7em;
+  height: 2.2em;
+  color: white;
+  border-radius: 5px;
 }
 .iptLogin {
-height: 2.5em;
-width: 15em;
-margin-right: 1em;
-border: none;
-border-radius: 5px;
+  height: 2.5em;
+  width: 15em;
+  margin-right: 1em;
+  border: none;
+  border-radius: 5px;
 }
 
-/* .test{
-	width: 100%;
-	height: 100%;
-} */
-.casa, .score, .visitante{
-		padding: 15px;
-}
-.visitante{
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	width: 50%;
-}
-.casa, .gols{
-	width: 50%;
-}
-.score{
-	font-weight: bold;
-	font-size: larger;
-}
-.titleRodada{
-	font-size: larger;
-	font-weight: bold;
-	padding: 0;
-}
-.cor> .bodyTabela:nth-child(-n+5){
-	background-color: RGBA(159,255,165,0.4);
-	}
-.cor> .bodyTabela:nth-last-child(-n+4){
-	background-color: RGBA(255,0,0,0.39);
-}
-.teste{
-justify-content: end;
-cursor: pointer;
-}
-.testando{
-	display: flex;
-	justify-content: center;
+
+.casa,
+.score,
+.visitante {
+  padding: 15px;
 }
 
-table {
-	border-spacing: 0;
+.score {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+.titleRodada {
+  font-size: 1.5em;
+  font-weight: bold;
+  padding: 0;
+}
+.tabela table {
+	min-width: 40em;
 	
 }
-
-td, tr{
-	padding: 0.2em 1em;
+table{
+	border-collapse: collapse;
 }
-.inputGol{
-	max-width: 40px;
-	max-height: 40px;
+.casa{
+	text-align: right;
+}
+.visitante{
+	text-align: left;
+}
+td,
+tr {
+  padding: 0.25rem 0.2rem;
+}
+.inputGol {
+  max-width: 40px;
+  max-height: 40px;
+}
+
+.editando{
+	background-color:#8AB99D;
+	border: none;
+	border-radius: 10em;
 }

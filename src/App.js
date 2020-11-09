@@ -8,12 +8,14 @@ import { pen } from "./assets/index";
 import { sort } from "./assets/index";
 import { check } from "./assets/index";
 
-const solicitarRodada = (setDadosRodada, setNovaRodada, rodada) => {
+const solicitarRodada = (setDadosRodada, rodada) => {
   fetch(`http://localhost:8081/jogos/${rodada}`)
     .then((res) => res.json())
     .then((dados) => {
-      setDadosRodada(dados.dados);
-      setNovaRodada(dados.dados[0].rodada);
+		if(dados.status === 'sucesso'){
+			setDadosRodada(dados.dados);
+		}
+      
     });
 };
 const solicitarClassificacao = (setClassificando) => {
@@ -31,6 +33,7 @@ const solicitarClassificacao = (setClassificando) => {
     });
 };
 
+
 export default function App() {
   const editarRodada = (token, id, golsCasa, golsVisitante) => {
     return fetch("http://localhost:8081/jogos", {
@@ -44,7 +47,10 @@ export default function App() {
         golsCasa: golsCasa,
         golsVisitante: golsVisitante,
       }),
-    }).catch((err) => {
+    }).then(() =>{
+		solicitarRodada(rodada)
+
+	}).catch((err) => {
       console.error(err);
     });
   };
@@ -93,8 +99,8 @@ export default function App() {
       ordem === "descendente" ? dadosAscendentes : dadosAscendentes.reverse();
     return (
       <div className="tabela">
-        <table className="cor">
-          <tr className="headerTabela">
+        <table>
+          <thead className="headerTabela">
             {colunas.map((coluna) => (
               <th>
                 {legenda[coluna]}{" "}
@@ -120,36 +126,38 @@ export default function App() {
                 />
               </th>
             ))}
-          </tr>
-
-          {dadosOrdenados.map((time, i) => (
-            <tr className="bodyTabela">
-              {colunas.map((coluna) =>
-                coluna === "saldoGols" ? (
-                  <td>
-                    {dadosOrdenados[i].golsFeitos -
-                      dadosOrdenados[i].golsSofridos}
-                  </td>
-                ) : (
-                  <td>{time[coluna]}</td>
-                )
-              )}
-            </tr>
-          ))}
+          </thead>
+          <tbody>
+            {dadosOrdenados.map((time, i) => (
+              <tr className="bodyTabela">
+                {colunas.map((coluna) =>
+                  coluna === "saldoGols" ? (
+                    <td>
+                      {dadosOrdenados[i].golsFeitos -
+                        dadosOrdenados[i].golsSofridos}
+                    </td>
+                  ) : (
+                    <td>{time[coluna]}</td>
+                  )
+                )}
+              </tr>
+            ))}
+          </tbody>
         </table>
       </div>
     );
   }
   function Rodadas(props) {
-    const [editando, setEditando] = React.useState(false);
+    const [editando, setEditando] = React.useState();
     return (
-      <div>
+      <div className="jogosRod">
         <table>
           <thead className="escolherRodada">
             <tr>
               <img
                 src={arrow_left}
-                alt=""
+                alt="seta esqueda"
+                title="Ir para rodada anterior"
                 onClick={() => {
                   if (rodada > 1) {
                     setRodada(rodada - 1);
@@ -157,14 +165,15 @@ export default function App() {
                 }}
               />
             </tr>
-            <tr>
-              <div className="titleRodada">{rodada}ª Rodada </div>
+            <tr className="titleRodada" colSpan={3}>
+              <div>{rodada}ª Rodada </div>
             </tr>
             <tr>
               <img
                 className="right"
                 src={arrow_right}
-                alt="arrow_right"
+                alt="seta direita"
+                title="Ir para a proxima rodada"
                 onClick={() => {
                   if (rodada < 38) {
                     setRodada(rodada + 1);
@@ -177,17 +186,17 @@ export default function App() {
             <tbody>
               {dadosRodada.map((x) => {
                 return (
-                  <tr className="testando">
+                  <tr>
                     <td className="casa">{x.time_casa}</td>
                     <div>
                       {id !== x.id ? (
                         <td className="score">{x.gols_casa}</td>
                       ) : (
                         <input
-						  type="number"
-						  className="inputGol"
+                          type="number"
+                          className="inputGol"
                           value={golsCasa}
-                          onChange={(event) => setGolsCasa(event.target.value)}
+                          onInput={(event) => setGolsCasa(event.target.value)}
                         />
                       )}
                       {rodada === null ? null : <td>&times;</td>}
@@ -195,10 +204,10 @@ export default function App() {
                         <td className="score">{x.gols_visitante}</td>
                       ) : (
                         <input
-						  type="number"
-						  className="inputGol"
+                          type="number"
+                          className="inputGol"
                           value={golsVisitante}
-                          onChange={(event) =>
+                          onInput={(event) =>
                             setGolsVisitante(event.target.value)
                           }
                         />
@@ -206,29 +215,34 @@ export default function App() {
                     </div>
                     <td className="visitante">{x.time_visitante} </td>
                     {token && (
-                      <img
-                        src={pen}
-                        alt="editar"
-                        onClick={() => {
-                          if (id === x.id) {
-                            setId(null);
+                      <td>
+                        <button className="editando"
+                          onClick={() => {
+                            if (id === x.id) {
+                              setId(null);
 
-                            editarRodada(
-                              token,
-                              id,
-                              golsCasa,
-                              golsVisitante
-                            ).then(() => {
-                              solicitarClassificacao(setClassificando);
-                              solicitarRodada(rodada);
-                            });
-                          } else {
-                            setId(x.id);
-                            setGolsCasa(x.gols_casa);
-                            setGolsVisitante(x.gols_visitante);
-                          }
-                        }}
-                      />
+                              editarRodada(
+                                token,
+                                id,
+                                golsCasa,
+                                golsVisitante
+                              ).then(() => {
+                                solicitarClassificacao(setClassificando);
+                                solicitarRodada(rodada);
+                              });
+                            } else {
+                              setId(x.id);
+                              setGolsCasa(x.gols_casa);
+                              setGolsVisitante(x.gols_visitante);
+                            }
+                          }}
+                        >
+                          <img
+                            src={id === x.id ? check : pen}
+                            alt={id === x.id ? "Salvar" : "Editar"}
+                          />
+                        </button>
+                      </td>
                     )}
                   </tr>
                 );
@@ -305,7 +319,6 @@ export default function App() {
   }
   const [rodada, setRodada] = React.useState(1);
   const [dadosRodada, setDadosRodada] = React.useState([]);
-  const [novaRodada, setNovaRodada] = React.useState(null);
   const [token, setToken] = React.useState(null);
   const [cassificando, setClassificando] = React.useState([]);
   const [id, setId] = React.useState(null);
@@ -316,7 +329,7 @@ export default function App() {
     solicitarClassificacao(setClassificando);
   }, []);
   React.useEffect(() => {
-    solicitarRodada(setDadosRodada, setNovaRodada, rodada);
+    solicitarRodada(setDadosRodada, rodada);
   }, [rodada]);
 
   return (
@@ -328,7 +341,7 @@ export default function App() {
         </div>
       </div>
       <div className="content">
-        <div className="center2">
+        <div className="center">
           <Rodadas />
           <TabelaClassificacao />
         </div>
