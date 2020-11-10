@@ -129,7 +129,12 @@ tr {
 }
 
 .editando{
-	background-color:#8AB99D;
-	border: none;
-	border-radius: 10em;
+	border-radius: 50%;
+    border: 0;
+    background-color: rgb(138, 185, 157);
+    width: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 2em;
 }

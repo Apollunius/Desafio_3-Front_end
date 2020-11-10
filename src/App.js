@@ -8,16 +8,7 @@ import { pen } from "./assets/index";
 import { sort } from "./assets/index";
 import { check } from "./assets/index";
 
-const solicitarRodada = (setDadosRodada, rodada) => {
-  fetch(`http://localhost:8081/jogos/${rodada}`)
-    .then((res) => res.json())
-    .then((dados) => {
-		if(dados.status === 'sucesso'){
-			setDadosRodada(dados.dados);
-		}
-      
-    });
-};
+
 const solicitarClassificacao = (setClassificando) => {
   fetch("http://localhost:8081/classificacao")
     .then((res) => res.json())
@@ -48,7 +39,7 @@ export default function App() {
         golsVisitante: golsVisitante,
       }),
     }).then(() =>{
-		solicitarRodada(rodada)
+		solicitarRodada(setRodada, rodada)
 
 	}).catch((err) => {
       console.error(err);
@@ -83,7 +74,7 @@ export default function App() {
     const [colunaOrdenada, setColunaOrdenada] = React.useState("pontos");
     const [ordem, setOrdem] = React.useState("descendente");
 
-    const dadosAscendentes = cassificando.sort((t1, t2) => {
+	const dadosAscendentes = classificando.sort((t1, t2) => {
       if (
         typeof t1[colunaOrdenada] === "number" &&
         typeof t2[colunaOrdenada] === "number"
@@ -320,16 +311,27 @@ export default function App() {
   const [rodada, setRodada] = React.useState(1);
   const [dadosRodada, setDadosRodada] = React.useState([]);
   const [token, setToken] = React.useState(null);
-  const [cassificando, setClassificando] = React.useState([]);
+  const [classificando, setClassificando] = React.useState([]);
   const [id, setId] = React.useState(null);
   const [golsCasa, setGolsCasa] = React.useState();
   const [golsVisitante, setGolsVisitante] = React.useState();
+
+  const solicitarRodada = (rodada) => {
+	fetch(`http://localhost:8081/jogos/${rodada}`)
+	  .then((res) => res.json())
+	  .then((dados) => {
+		  if(dados.status === 'sucesso'){
+			  setDadosRodada(dados.dados);
+		  }
+		
+	  });
+  };
 
   React.useEffect(() => {
     solicitarClassificacao(setClassificando);
   }, []);
   React.useEffect(() => {
-    solicitarRodada(setDadosRodada, rodada);
+    solicitarRodada(rodada);
   }, [rodada]);
 
   return (
