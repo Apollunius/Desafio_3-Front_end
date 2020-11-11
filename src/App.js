@@ -8,9 +8,8 @@ import { pen } from "./assets/index";
 import { sort } from "./assets/index";
 import { check } from "./assets/index";
 
-
 const solicitarClassificacao = (setClassificando) => {
-  fetch("http://localhost:8081/classificacao")
+  fetch(`${process.env.REACT_APP_API_URL}/classificacao`)
     .then((res) => res.json())
     .then((dados) => {
       const newPosition = dados.dados.map((l, p) => {
@@ -24,10 +23,9 @@ const solicitarClassificacao = (setClassificando) => {
     });
 };
 
-
 export default function App() {
   const editarRodada = (token, id, golsCasa, golsVisitante) => {
-    return fetch("http://localhost:8081/jogos", {
+    return fetch(`${process.env.REACT_APP_API_URL}/jogos`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -38,12 +36,13 @@ export default function App() {
         golsCasa: golsCasa,
         golsVisitante: golsVisitante,
       }),
-    }).then(() =>{
-		solicitarRodada(setRodada, rodada)
-
-	}).catch((err) => {
-      console.error(err);
-    });
+    })
+      .then(() => {
+        solicitarRodada(setRodada, rodada);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   function TabelaClassificacao() {
@@ -74,7 +73,7 @@ export default function App() {
     const [colunaOrdenada, setColunaOrdenada] = React.useState("pontos");
     const [ordem, setOrdem] = React.useState("descendente");
 
-	const dadosAscendentes = classificando.sort((t1, t2) => {
+    const dadosAscendentes = classificando.sort((t1, t2) => {
       if (
         typeof t1[colunaOrdenada] === "number" &&
         typeof t2[colunaOrdenada] === "number"
@@ -207,7 +206,8 @@ export default function App() {
                     <td className="visitante">{x.time_visitante} </td>
                     {token && (
                       <td>
-                        <button className="editando"
+                        <button
+                          className="editando"
                           onClick={() => {
                             if (id === x.id) {
                               setId(null);
@@ -270,10 +270,14 @@ export default function App() {
           <form
             onSubmit={(event) => {
               event.preventDefault();
-              fazerRequisicaoComBody("http://localhost:8081/auth", "POST", {
-                email,
-                password,
-              })
+              fazerRequisicaoComBody(
+                "${process.env.REACT_APP_API_URL}/auth",
+                "POST",
+                {
+                  email,
+                  password,
+                }
+              )
                 .then((res) => res.json())
                 .then((respostaJson) => {
                   const novoToken = respostaJson.dados.token;
@@ -317,14 +321,13 @@ export default function App() {
   const [golsVisitante, setGolsVisitante] = React.useState();
 
   const solicitarRodada = (rodada) => {
-	fetch(`http://localhost:8081/jogos/${rodada}`)
-	  .then((res) => res.json())
-	  .then((dados) => {
-		  if(dados.status === 'sucesso'){
-			  setDadosRodada(dados.dados);
-		  }
-		
-	  });
+    fetch(`${process.env.REACT_APP_API_URL}/jogos/${rodada}`)
+      .then((res) => res.json())
+      .then((dados) => {
+        if (dados.status === "sucesso") {
+          setDadosRodada(dados.dados);
+        }
+      });
   };
 
   React.useEffect(() => {
